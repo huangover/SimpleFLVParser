@@ -1,6 +1,13 @@
 # SimpleFLVParser
 
-运行Xcode，可以在终端看到FLV文件的信息如下:  
+## 使用方式1：
+把FLVParser.h和FLVParser.c文件拷贝下来，调用int initWithFile(const char* fileName)方法初始化，然后调用void parse(void)进行解析
+
+## 使用方式2：
+克隆整个Xcode项目并运行
+
+## 终端输出信息
+可以在终端看到FLV文件的信息如下:  
 
 文件长度669036  
 Signature是：FLV  
