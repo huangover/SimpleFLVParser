@@ -17,6 +17,7 @@
 
 FILE *file = NULL;
 long fileLen = 0;
+
 const char * const Audio_Codecs[] = {"Linear PCM", "ADPCM", "MP3", "Linear PCM, little endian",
                         "Nellymoser 16KHz mono", "nellymoser 8khz mono", "nellymoser",
                         "G711 A-law log PCM", "G711 mu-law log PCM", "reversed", "AAC",
@@ -56,6 +57,17 @@ int initWithFile(const char* fileName) {
     fileLen = ftell(file);
     printf("文件长度%lu\n", fileLen);
     fseek(file, 0, SEEK_SET);
+    
+    int x = 1;
+    if(*(char *)&x == 1) {
+#ifndef CPU_ENDIAN_SMALL
+#define CPU_ENDIAN_SMALL 1
+#endif
+    } else {
+#ifndef CPU_ENDIAN_SMALL
+#define CPU_ENDIAN_SMALL 0
+#endif
+    }
     
     return 1;
 }
@@ -143,7 +155,9 @@ void parseBody() {
 void parsePreviousTagLength(FILE *file) {
     uint32_t tagSize;
     readOrExit(&tagSize, sizeof(char), 4, file, "读取前一个Tag长度错误");
+#if CPU_ENDIAN_SMALL
     flip32(&tagSize);
+#endif
     printf("前一个tag长度是%d\n\n", tagSize);
 }
 
@@ -164,21 +178,27 @@ void parseGeneralTagType(FILE *file, uint8_t *tagType) {
 void parseDataSize(FILE *file, uint32_t *dataSize) {
     *dataSize = 0;
     readOrExit(dataSize, sizeof(char), 3, file, "读取data size失败");
+#if CPU_ENDIAN_SMALL
     flip24(dataSize);
+#endif
     printf("data size是%u\n", *dataSize);
 }
 
 void parseTimeStamp(FILE *file) {
     uint32_t timeStampLow = 0;
     readOrExit(&timeStampLow, sizeof(char), 3, file, "读取time stamp失败");
+#if CPU_ENDIAN_SMALL
     flip24(&timeStampLow);
+#endif
     printf("time stampe是%u\n", timeStampLow);
 }
 
 void parseStreamID(FILE *file) {
     uint32_t streamID = 0;
     readOrExit(&streamID, sizeof(char), 3, file, "读取sream id失败");
+#if CPU_ENDIAN_SMALL
     flip24(&streamID);
+#endif
     printf("streamID是%u\n", streamID);
 }
 
@@ -251,13 +271,16 @@ void parseMetaData(FILE *file, uint32_t dataSize) {
 #pragma mark - Utils
 
 void flip32(uint32_t *i) {
-    *i = (((uint32_t)(*i) & 0xff000000) >> 24) |  (((uint32_t)(*i) & 0x00ff0000) >> 8) | \
-    (((uint32_t)(*i) & 0x0000ff00) << 8) | (((uint32_t)(*i) & 0x000000ff) << 24);
+#if CPU_ENDIAN_SMALL
+    *i = ((*i & 0xff000000) >> 24) |  ((*i & 0x00ff0000) >> 8) | ((*i & 0x0000ff00) << 8) | ((*i & 0x000000ff) << 24);
+#endif
 }
 
 void flip24(uint32_t *i) {
+#if CPU_ENDIAN_SMALL
     *i &= 0x00ffffff;
     *i = ((*i & 0x00ff0000) >> 16) | (*i & 0x0000ff00) | ((*i & 0x000000ff) << 16);
+#endif
 }
 
 void readOrExit(void * __restrict __ptr, size_t __size, size_t __nitems, FILE * __restrict __stream, char *errMsg) {
