@@ -17,17 +17,17 @@
 
 FILE *file = NULL;
 long fileLen = 0;
-char *Audio_Codecs[] = {"Linear PCM", "ADPCM", "MP3", "Linear PCM, little endian",
+const char * const Audio_Codecs[] = {"Linear PCM", "ADPCM", "MP3", "Linear PCM, little endian",
                         "Nellymoser 16KHz mono", "nellymoser 8khz mono", "nellymoser",
-                        "G711 a-law log PCM", "G711 mu-law log PCM", "reversed", "AAC",
-                        "MP3 8KHZ", "Device-specific sound"};
-char *Audio_Sampling_Rate[] = {"5.5 KHZ", "11 khz", "22 khz", "44 khz"};
-char *Audio_Sampleing_Accuracy[] = {"8 bits", "16 bits"};
-char *Audio_Channel_Type[] = {"mono", "stereo"};
-char *Video_Frame_Type[] = {"!!视频帧类型出错!!", "keyframe", "inter frame", "disposable inter frame",
+                        "G711 A-law log PCM", "G711 mu-law log PCM", "reversed", "AAC",
+                        "Speedx", "MP3 8kHz", "Device-specific sound"};
+const char * const Audio_Sampling_Rate[] = {"5.5 kHz", "11 kHz", "22 kHz", "44 kHz"};
+const char * const Audio_Sampleing_Accuracy[] = {"8 bits", "16 bits"};
+const char * const Audio_Channel_Type[] = {"mono", "stereo"};
+const char * const Video_Frame_Type[] = {"!!视频帧类型出错!!", "keyframe", "inter frame", "disposable inter frame",
                             "generated keyframe", "video info/command frame"};
-char *Video_Codecs[] = {"!!视频编码器出错！！", "JPEG", "H263", "Sreen video", "on2 vp6",
-                        "one 2 vp6 with alpha", "screen vido v2", "avc"};
+const char * const Video_Codecs[] = {"!!视频编码器出错！！", "JPEG", "H263", "Sreen video", "On2 Vp6",
+                        "On2 Vp6 with alpha", "Screen video v2", "AVC"};
 
 void parseHeader(void);
 void parseBody(void);
@@ -61,18 +61,12 @@ int initWithFile(const char* fileName) {
 }
 
 void parse() {
-    
-    if (!file) {
-        printAndExit("Cannot open file with NULL");
-        return;
-    }
-    
+    if (!file) printAndExit("Cannot open file with NULL");
     parseHeader();
     parseBody();
 }
 
 void parseHeader() {
-    
     char *header = calloc(9, sizeof(char));
     readOrExit(header, sizeof(char), 9, file, "Failed to read FLV header");
     
@@ -117,9 +111,9 @@ void parseBody() {
         parsePreviousTagLength(file);
         printSeperator();
         
+        // 根据FLV文件的格式，文件到此为止
         if(fileLen == ftell(file)) break;
         
-        //=========================== TAG ===========================
         //===========================tag type===========================
         parseGeneralTagType(file, &tagType);
         //===========================data size===========================
