@@ -8,6 +8,7 @@
 
 #include "FLVParserUtil.h"
 #include <stdlib.h>
+#include <strings.h>
 
 void flip(void *i, int size);
 void flips(void *i, int size, int startIndex);
@@ -20,6 +21,53 @@ int computeEndian() {
     } else {
         i = (*(char *)&x == 1);
         return i;
+    }
+}
+
+typedef struct {
+    int len;
+    char *logString;
+} LogMessage;
+
+const int LOG_STRING_INITIAL_LEN = 300;
+static int LOG_STRING_LEN = LOG_STRING_INITIAL_LEN;
+
+//LogMessage *createLogString(void) {
+//    LogMessage *log = malloc(sizeof(LogMessage));
+//    log->len = 300;
+//    log->dst = calloc(sizeof(char), log->len);
+//
+//    return log;
+//}
+//
+//void fp_strcat(LogMessage *logMessage, const char *source) {
+//    if (strlen(logMessage->dst) + strlen(source) < logMessage->len) {
+//        strcat(logMessage->dst, source);
+//    } else {
+//        logMessage->len *= 2;
+//        char *new = calloc(sizeof(char), logMessage->len);
+//        strcpy(new, logMessage->dst);
+//        free(logMessage->dst);
+//        logMessage->dst = new;
+//        fp_strcat(logMessage, source);
+//    }
+//}
+
+char *createLogString(void) {
+    char *logString = calloc(sizeof(char), LOG_STRING_INITIAL_LEN);
+    return logString;
+}
+
+void fp_strcat(char **dst, const char *source) {
+    if (strlen(*dst) + strlen(source) < LOG_STRING_LEN) {
+        strcat(*dst, source);
+    } else {
+        LOG_STRING_LEN *= 2;
+        char *newA = calloc(sizeof(char), LOG_STRING_LEN);
+        strcpy(newA, *dst);
+        free(*dst);
+        *dst = newA;
+        fp_strcat(dst, source);
     }
 }
 

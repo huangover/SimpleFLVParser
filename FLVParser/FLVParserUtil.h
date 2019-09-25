@@ -13,7 +13,17 @@
 
 #define CPU_ENDIAN_SMALL computeEndian()
 
+//typedef struct {
+//    int len;
+//    char *dst;
+//} LogMessage;
+
 int computeEndian(void);
+//LogMessage *createLogString(void);
+//void fp_strcat(LogMessage *logMessage, const char *source);
+char *createLogString(void);
+void fp_strcat(char **dst, const char *source);
+
 void flip16(uint16_t *i);
 void flip24(uint32_t *i);
 void flip32(uint32_t *i);
