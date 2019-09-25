@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		115F917F2338B41D00BC24A8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 115F917E2338B41D00BC24A8 /* main.m */; };
 		115F91892338B45100BC24A8 /* FLVParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F91882338B45100BC24A8 /* FLVParser.c */; };
+		115F918D233B47A400BC24A8 /* FLVParserUtil.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F918C233B47A400BC24A8 /* FLVParserUtil.c */; };
+		115F9190233B47B200BC24A8 /* FLVScriptDataParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F918F233B47B200BC24A8 /* FLVScriptDataParser.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,6 +32,10 @@
 		115F91862338B43900BC24A8 /* sample1.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample1.flv; sourceTree = "<group>"; };
 		115F91872338B45100BC24A8 /* FLVParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLVParser.h; sourceTree = "<group>"; };
 		115F91882338B45100BC24A8 /* FLVParser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = FLVParser.c; sourceTree = "<group>"; };
+		115F918B233B47A400BC24A8 /* FLVParserUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLVParserUtil.h; sourceTree = "<group>"; };
+		115F918C233B47A400BC24A8 /* FLVParserUtil.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = FLVParserUtil.c; sourceTree = "<group>"; };
+		115F918E233B47B200BC24A8 /* FLVScriptDataParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLVScriptDataParser.h; sourceTree = "<group>"; };
+		115F918F233B47B200BC24A8 /* FLVScriptDataParser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = FLVScriptDataParser.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +73,10 @@
 				115F917E2338B41D00BC24A8 /* main.m */,
 				115F91872338B45100BC24A8 /* FLVParser.h */,
 				115F91882338B45100BC24A8 /* FLVParser.c */,
+				115F918B233B47A400BC24A8 /* FLVParserUtil.h */,
+				115F918C233B47A400BC24A8 /* FLVParserUtil.c */,
+				115F918E233B47B200BC24A8 /* FLVScriptDataParser.h */,
+				115F918F233B47B200BC24A8 /* FLVScriptDataParser.c */,
 			);
 			path = FLVParser;
 			sourceTree = "<group>";
@@ -129,6 +139,8 @@
 			files = (
 				115F917F2338B41D00BC24A8 /* main.m in Sources */,
 				115F91892338B45100BC24A8 /* FLVParser.c in Sources */,
+				115F9190233B47B200BC24A8 /* FLVScriptDataParser.c in Sources */,
+				115F918D233B47A400BC24A8 /* FLVParserUtil.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
