@@ -56,17 +56,6 @@ int initWithFile(const char* fileName) {
     printf("文件长度%lu\n", fileLen);
     fseek(file, 0, SEEK_SET);
     
-//    int x = 1;
-//    if(*(char *)&x == 1) {
-//#ifndef CPU_ENDIAN_SMALL
-//#define CPU_ENDIAN_SMALL 1
-//#endif
-//    } else {
-//#ifndef CPU_ENDIAN_SMALL
-//#define CPU_ENDIAN_SMALL 0
-//#endif
-//    }
-    
     return 1;
 }
 

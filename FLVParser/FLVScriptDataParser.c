@@ -19,17 +19,27 @@
  解析SCRIPT DATA STRING对象
  返回值：1 成功；0 失败
  */
-int parseScriptDataString(FILE *file, char **logMessage);
+int parseString(FILE *file, char **logMessage);
+/*
+ 解析SCRIPT DATA LONG STRING对象
+ 返回值：1 成功；0 失败
+ */
+int parseLongString(FILE *file, char **logMessage);
+/*
+ 解析SCRIPT DATA DATE对象
+ 返回值：1 成功；0 失败
+ */
+int parseDate(FILE *file, char **logMessage);
 /*
  解析SCRIPT DATA VARIABLE数组
  返回值：1 成功；0 失败
  */
-int parseScriptDataVariableArray(FILE *file, int arrayLen, char **logMessage);
+int parseVariableArray(FILE *file, int arrayLen, char **logMessage);
 /*
  解析SCRIPT DATA VALUE对象
  返回值：1 成功；0 失败
  */
-int parseScriptDataValue(FILE *file, char **logMessage);
+int parseValue(FILE *file, char **logMessage);
 /*
  预读0x000009结束符(文件偏移量会被重置)。SCRIPT DATA OBJECT END和SCRIPT DATA VARIABLE END均为此值
  */
@@ -48,7 +58,7 @@ void parseScriptData(FILE *file, uint32_t dataSize) {
     char *logMessage = createLogString();
     
     while (endSymbol != META_DATA_END) {
-        if (!parseScriptDataValue(file, &logMessage)) {
+        if (!parseValue(file, &logMessage)) {
             parseError = true;
             puts(logMessage);
             break;
@@ -72,14 +82,12 @@ void parseScriptData(FILE *file, uint32_t dataSize) {
 
 #pragma mark - Private
 
-int parseScriptDataString(FILE *file, char **logMessage) {
+int parseString(FILE *file, char **logMessage) {
     uint16_t nameLen;
     if (!readOrReturn(&nameLen, sizeof(uint16_t), 1, file, "读取string的长度失败")) {
         return 0;
     }
-#ifdef CPU_ENDIAN_SMALL
-    flip16(&nameLen);
-#endif
+    if (CPU_ENDIAN_SMALL) flip16(&nameLen);
     char *name = calloc(nameLen + 2, sizeof(char)); // +1 为了在最后放:+一个空格
     if (!readOrReturn(name, sizeof(char), nameLen, file, "读取string的值失败")) {
         return 0;
@@ -91,72 +99,76 @@ int parseScriptDataString(FILE *file, char **logMessage) {
     return 1;
 }
 
-int parseScriptDataVariableArray(FILE *file, int arrayLen, char **logMessage) {
+int parseLongString(FILE *file, char **logMessage) {
+    uint32_t nameLen;
+    if (!readOrReturn(&nameLen, sizeof(uint16_t), 1, file, "读取string的长度失败")) {
+        return 0;
+    }
+    if (CPU_ENDIAN_SMALL) flip32(&nameLen);
+    
+    char *name = calloc(nameLen + 2, sizeof(char)); // +1 为了在最后放:+一个空格
+    if (!readOrReturn(name, sizeof(char), nameLen, file, "读取string的值失败")) {
+        return 0;
+    }
+    
+    fp_strcat(logMessage, strcat(name, ": "));
+    free(name);
+    
+    return 1;
+}
+
+int parseDate(FILE *file, char **logMessage) {
+    
+    char *m = calloc(30, sizeof(char)); // +1 为了在最后放:+一个空格
+    
+    uint64_t seconds = 0;
+    if (!readOrReturn(&seconds, sizeof(uint64_t), 1, file, "读取毫秒失败")) {
+        return 0;
+    }
+    
+    sprintf(m, "时间(毫秒):%llu:\n", seconds);
+    
+    int16_t timeOffset = 0;
+    if (!readOrReturn(&timeOffset, sizeof(int16_t), 1, file, "读取时间偏移量失败")) {
+        return 0;
+    }
+    
+    memset(m, 0, 30);
+    sprintf(m, "时间偏移(毫秒):%d:\n", timeOffset);
+    
+    return 1;
+}
+
+int parseVariableArray(FILE *file, int arrayLen, char **logMessage) {
     while (arrayLen > 0) {
-        if (!parseScriptDataString(file, logMessage)) {
+        if (!parseString(file, logMessage)) {
             return 0;
         }
-        if (!parseScriptDataValue(file, logMessage)) {
+        if (!parseValue(file, logMessage)) {
             return 0;
         }
         arrayLen--;
     }
     
-    // ECMA数组以0x000009结束
-    if (readMetaDataEndSymbol(file) != META_DATA_END) {
-        return 0;
-    }
-    
     return 1;
 }
 
-int parseScriptDataValue(FILE *file, char **logMessage) {
-    //================= 解析ScriptDataValue ===================
+int parseStrictArray(FILE *file, char **logMessage) {
+    
+    uint32_t len = 0;
+    if (!readOrReturn(&len, sizeof(uint32_t), 1, file, "读取strict array类型的数组长度失败")) {
+        fp_strcat(logMessage, "读取strict array类型的数组长度失败");
+        return 0;
+    }
+    
+    return parseVariableArray(file, len, logMessage);
+}
+
+int parseValue(FILE *file, char **logMessage) {
     //================= type =================
     uint8_t valueType;
     if (!readOrReturn(&valueType, sizeof(uint8_t), 1, file, "读取metadata属性值的类型失败")) {
         return 0;
-    }
-    switch (valueType) {
-        case 0:
-            fp_strcat(logMessage, "number类型 ");
-            break;
-        case 1:
-            //            logMessage = fp_strcat(&logMessage, "boolean类型");
-            break;
-        case 2:
-            fp_strcat(logMessage, "string类型 ");
-            break;
-        case 3:
-            //            logMessage = fp_strcat(&logMessage, "object类型");
-            break;
-        case 4:
-            //            logMessage = fp_strcat(&logMessage, "movie clip类型");
-            break;
-        case 5:
-            //            logMessage = fp_strcat(&logMessage, "null类型");
-            break;
-        case 6:
-            //            logMessage = fp_strcat(&logMessage, "undefined类型");
-            break;
-        case 7:
-            //            logMessage = fp_strcat(&logMessage, "reference类型");
-            break;
-        case 8:
-            fp_strcat(logMessage, "ECMA数组类型 ");
-            break;
-        case 10:
-            //            logMessage = fp_strcat(&logMessage, "strict array类型");
-            break;
-        case 11:
-            //            logMessage = fp_strcat(&logMessage, "date类型");
-            break;
-        case 12:
-            //            logMessage = fp_strcat(&logMessage, "long string类型");
-            break;
-        default:
-            //logMessage = fp_strcat(&logMessage, "非法metadata类型");
-            return 0;
     }
     
     //================= ECMA Array Length (Optional) =================
@@ -192,27 +204,36 @@ int parseScriptDataValue(FILE *file, char **logMessage) {
         fp_strcat(logMessage, m);
         
     } else if (valueType == 2 || valueType == 4) {
-        parseScriptDataString(file, logMessage);
+        parseString(file, logMessage);
+    } else if (valueType == 3) {
+        // TO-DO: script_data_object[n]，n未知
+        fp_strcat(logMessage, "类型为object的metadata字段解析失败");
+        return 0;
     } else if (valueType == 7) {
         uint16_t value;
         if (!readOrReturn(&value, sizeof(uint16_t), 1, file, "读取reference的值失败")) {
             return 0;
         }
-#ifdef CPU_ENDIAN_SMALL
-        flip16(&value);
-#endif
+        if (CPU_ENDIAN_SMALL) flip16(&value);
         char m[50];
         sprintf(m, " %d\n", value);
         fp_strcat(logMessage, m);
         
     } else if (valueType == 8) {
-        return parseScriptDataVariableArray(file, ecmaArrayLen, logMessage);
+        return parseVariableArray(file, ecmaArrayLen, logMessage);
     } else if (valueType == 10) {
-        
+        return parseStrictArray(file, logMessage);
     } else if (valueType == 11) {
-        
+        return parseDate(file, logMessage);
     } else if (valueType == 12) {
-        
+        return parseLongString(file, logMessage);
+    }
+    
+    if (valueType == 3 || valueType == 8) {
+        if (readMetaDataEndSymbol(file) != META_DATA_END) {
+            fp_strcat(logMessage, "类型为ECMA和ECMA数组必须以0x000009结尾");
+            return 0;
+        }
     }
     
     return 1;
