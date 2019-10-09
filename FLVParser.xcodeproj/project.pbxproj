@@ -12,6 +12,7 @@
 		115F918D233B47A400BC24A8 /* FLVParserUtil.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F918C233B47A400BC24A8 /* FLVParserUtil.c */; };
 		115F9190233B47B200BC24A8 /* FLVScriptDataParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F918F233B47B200BC24A8 /* FLVScriptDataParser.c */; };
 		115F9197233CC9C600BC24A8 /* FLVVideoParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F9196233CC9C600BC24A8 /* FLVVideoParser.c */; };
+		115F919F234DF3B800BC24A8 /* FLVAvcVideoPacketParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F919E234DF3B800BC24A8 /* FLVAvcVideoPacketParser.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,6 +42,8 @@
 		115F9196233CC9C600BC24A8 /* FLVVideoParser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = FLVVideoParser.c; sourceTree = "<group>"; };
 		115F9199234C9A1000BC24A8 /* test.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.flv; sourceTree = "<group>"; };
 		115F919C234DBF2D00BC24A8 /* SSZLive.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = SSZLive.flv; sourceTree = "<group>"; };
+		115F919D234DF3B800BC24A8 /* FLVAvcVideoPacketParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLVAvcVideoPacketParser.h; sourceTree = "<group>"; };
+		115F919E234DF3B800BC24A8 /* FLVAvcVideoPacketParser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = FLVAvcVideoPacketParser.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +87,8 @@
 				115F918C233B47A400BC24A8 /* FLVParserUtil.c */,
 				115F9195233CC9C600BC24A8 /* FLVVideoParser.h */,
 				115F9196233CC9C600BC24A8 /* FLVVideoParser.c */,
+				115F919D234DF3B800BC24A8 /* FLVAvcVideoPacketParser.h */,
+				115F919E234DF3B800BC24A8 /* FLVAvcVideoPacketParser.c */,
 				115F918E233B47B200BC24A8 /* FLVScriptDataParser.h */,
 				115F918F233B47B200BC24A8 /* FLVScriptDataParser.c */,
 			);
@@ -146,6 +151,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				115F919F234DF3B800BC24A8 /* FLVAvcVideoPacketParser.c in Sources */,
 				115F917F2338B41D00BC24A8 /* main.m in Sources */,
 				115F9197233CC9C600BC24A8 /* FLVVideoParser.c in Sources */,
 				115F91892338B45100BC24A8 /* FLVParser.c in Sources */,
