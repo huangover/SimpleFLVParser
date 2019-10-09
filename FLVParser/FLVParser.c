@@ -14,6 +14,7 @@
 #include "FLVScriptDataParser.h"
 #include "FLVParser.h"
 #include "FLVParserUtil.h"
+#include "FLVVideoParser.h"
 
 #define VIDEO_TAG 9
 #define AUDIO_TAG 8
@@ -30,10 +31,6 @@ const char * const Audio_Codecs[] = {"Linear PCM", "ADPCM", "MP3", "Linear PCM, 
 const char * const Audio_Sampling_Rate[] = {"5.5 kHz", "11 kHz", "22 kHz", "44 kHz"};
 const char * const Audio_Sampleing_Accuracy[] = {"8 bits", "16 bits"};
 const char * const Audio_Channel_Type[] = {"mono", "stereo"};
-const char * const Video_Frame_Type[] = {"!!视频帧类型出错!!", "keyframe", "inter frame", "disposable inter frame",
-                            "generated keyframe", "video info/command frame"};
-const char * const Video_Codecs[] = {"!!视频编码器出错！！", "JPEG", "H263", "Sreen video", "On2 Vp6",
-                        "On2 Vp6 with alpha", "Screen video v2", "AVC"};
 
 void parseHeader(void);
 void parseBody(void);
@@ -48,7 +45,7 @@ void parseVideoData(FILE *file, uint32_t dataSize);
 int initWithFile(const char* fileName) {
     if ((file = fopen(fileName, "r")) == NULL) {
         printf("Failed to open file %s\n", fileName);
-        return 0;
+        return FAILURE;
     }
     
     fseek(file, 0, SEEK_END);
@@ -56,7 +53,7 @@ int initWithFile(const char* fileName) {
     printf("文件长度%lu\n", fileLen);
     fseek(file, 0, SEEK_SET);
     
-    return 1;
+    return SUCCESS;
 }
 
 void parse() {
@@ -195,48 +192,4 @@ void parseAudioData(FILE *file, uint32_t dataSize) {
     
     // 跳过实际数据
     fseek(file, dataSize-1, SEEK_CUR);
-}
-
-void parseVideoData(FILE *file, uint32_t dataSize) {
-    char param;
-    readOrExit(&param, sizeof(char), 1, file, "读取视频参数失败");
-    int frame = (int)((param & 0xf0) >> 4);
-    printf("视频帧类型: %s\n", Video_Frame_Type[frame]);
-    int codec = (int)(param & 0x0f);
-    printf("视频编码器: %s\n", Video_Codecs[codec]);
-    
-    // 跳过实际数据
-    fseek(file, dataSize-1, SEEK_CUR);
-    
-    //                int video_info_or_command_frame = 5;
-    //                if (frame == video_info_or_command_frame) {
-    //                    fseek(file, 1, SEEK_CUR);
-    //                } else {
-    //                    const int h264_video_packet = 2;
-    //                    const int screen_video_packet = 3;
-    //                    const int vp6_flv_video_packet = 4;
-    //                    const int vp6_flv_alpha_video_packet = 5;
-    //                    const int screen_v2_video_packet = 6;
-    //                    const int avc_video_packet = 7;
-    //
-    //                    switch (codec) {
-    ////                        case h264_video_packet:
-    ////                            break;
-    ////                        case screen_video_packet:
-    ////                            break;
-    ////                        case vp6_flv_video_packet:
-    ////                            break;
-    ////                        case vp6_flv_alpha_video_packet:
-    ////                            break;
-    ////                        case screen_v2_video_packet:
-    ////                            break;
-    //                        case avc_video_packet:
-    //                            fseek(file, *dataSize-1, SEEK_CUR);
-    //                            break;
-    //                        default:
-    //                            puts("video packet类型暂不支持，出错");
-    //                            exit(EXIT_FAILURE);
-    //                            break;
-    //                    }
-    //                }
 }

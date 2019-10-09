@@ -7,7 +7,6 @@
 //
 
 #include "FLVScriptDataParser.h"
-#include "FLVParser.h"
 #include "FLVParserUtil.h"
 #include <memory.h>
 #include <stdbool.h>
@@ -85,36 +84,36 @@ void parseScriptData(FILE *file, uint32_t dataSize) {
 int parseString(FILE *file, char **logMessage) {
     uint16_t nameLen;
     if (!readOrReturn(&nameLen, sizeof(uint16_t), 1, file, "读取string的长度失败")) {
-        return 0;
+        return FAILURE;
     }
     if (CPU_ENDIAN_SMALL) flip16(&nameLen);
     char *name = calloc(nameLen + 2, sizeof(char)); // +1 为了在最后放:+一个空格
     if (!readOrReturn(name, sizeof(char), nameLen, file, "读取string的值失败")) {
-        return 0;
+        return FAILURE;
     }
     
     fp_strcat(logMessage, strcat(name, ": "));
     free(name);
     
-    return 1;
+    return SUCCESS;
 }
 
 int parseLongString(FILE *file, char **logMessage) {
     uint32_t nameLen;
     if (!readOrReturn(&nameLen, sizeof(uint16_t), 1, file, "读取string的长度失败")) {
-        return 0;
+        return FAILURE;
     }
     if (CPU_ENDIAN_SMALL) flip32(&nameLen);
     
     char *name = calloc(nameLen + 2, sizeof(char)); // +1 为了在最后放:+一个空格
     if (!readOrReturn(name, sizeof(char), nameLen, file, "读取string的值失败")) {
-        return 0;
+        return FAILURE;
     }
     
     fp_strcat(logMessage, strcat(name, ": "));
     free(name);
     
-    return 1;
+    return SUCCESS;
 }
 
 int parseDate(FILE *file, char **logMessage) {
@@ -123,34 +122,34 @@ int parseDate(FILE *file, char **logMessage) {
     
     uint64_t seconds = 0;
     if (!readOrReturn(&seconds, sizeof(uint64_t), 1, file, "读取毫秒失败")) {
-        return 0;
+        return FAILURE;
     }
     
     sprintf(m, "时间(毫秒):%llu:\n", seconds);
     
     int16_t timeOffset = 0;
     if (!readOrReturn(&timeOffset, sizeof(int16_t), 1, file, "读取时间偏移量失败")) {
-        return 0;
+        return FAILURE;
     }
     
     memset(m, 0, 30);
     sprintf(m, "时间偏移(毫秒):%d:\n", timeOffset);
     
-    return 1;
+    return SUCCESS;
 }
 
 int parseVariableArray(FILE *file, int arrayLen, char **logMessage) {
     while (arrayLen > 0) {
         if (!parseString(file, logMessage)) {
-            return 0;
+            return FAILURE;
         }
         if (!parseValue(file, logMessage)) {
-            return 0;
+            return FAILURE;
         }
         arrayLen--;
     }
     
-    return 1;
+    return SUCCESS;
 }
 
 int parseStrictArray(FILE *file, char **logMessage) {
@@ -158,7 +157,7 @@ int parseStrictArray(FILE *file, char **logMessage) {
     uint32_t len = 0;
     if (!readOrReturn(&len, sizeof(uint32_t), 1, file, "读取strict array类型的数组长度失败")) {
         fp_strcat(logMessage, "读取strict array类型的数组长度失败");
-        return 0;
+        return FAILURE;
     }
     
     return parseVariableArray(file, len, logMessage);
@@ -168,14 +167,14 @@ int parseValue(FILE *file, char **logMessage) {
     //================= type =================
     uint8_t valueType;
     if (!readOrReturn(&valueType, sizeof(uint8_t), 1, file, "读取metadata属性值的类型失败")) {
-        return 0;
+        return FAILURE;
     }
     
     //================= ECMA Array Length (Optional) =================
     uint32_t ecmaArrayLen = 0;
     if (valueType == 8) {
         if (!readOrReturn(&ecmaArrayLen, sizeof(uint32_t), 1, file, "读取ECMA Array长度出错")) {
-            return 0;
+            return FAILURE;
         }
 
         if(CPU_ENDIAN_SMALL) flip32(&ecmaArrayLen);
@@ -188,7 +187,7 @@ int parseValue(FILE *file, char **logMessage) {
     if (valueType == 0) {
         uint64_t value;
         if (!readOrReturn(&value, sizeof(uint64_t), 1, file, "读取number的值失败")) {
-            return 0;
+            return FAILURE;
         }
         if (CPU_ENDIAN_SMALL) flip64(&value);
         char m[50];
@@ -208,11 +207,11 @@ int parseValue(FILE *file, char **logMessage) {
     } else if (valueType == 3) {
         // TO-DO: script_data_object[n]，n未知
         fp_strcat(logMessage, "类型为object的metadata字段解析失败");
-        return 0;
+        return FAILURE;
     } else if (valueType == 7) {
         uint16_t value;
         if (!readOrReturn(&value, sizeof(uint16_t), 1, file, "读取reference的值失败")) {
-            return 0;
+            return FAILURE;
         }
         if (CPU_ENDIAN_SMALL) flip16(&value);
         char m[50];
@@ -232,11 +231,11 @@ int parseValue(FILE *file, char **logMessage) {
     if (valueType == 3 || valueType == 8) {
         if (readMetaDataEndSymbol(file) != META_DATA_END) {
             fp_strcat(logMessage, "类型为ECMA和ECMA数组必须以0x000009结尾");
-            return 0;
+            return FAILURE;
         }
     }
     
-    return 1;
+    return SUCCESS;
 }
 
 uint32_t readMetaDataEndSymbol(FILE *file) {

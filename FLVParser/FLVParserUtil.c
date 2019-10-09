@@ -71,21 +71,34 @@ void fp_strcat(char **dst, const char *source) {
     }
 }
 
-void flip16(uint16_t *i) {
+void fp_strcatMultiple(char **dst, ...) {
+    va_list ap;
+    va_start(ap, dst);
+    const char *c;
+    
+    while (1) {
+        c = va_arg(ap, const char*);
+        if (strcmp(c, "") == 0) break;
+        fp_strcat(dst, c);
+    }
+    va_end(ap);
+}
+
+void flip16(void *i) {
     if(CPU_ENDIAN_SMALL) flip(i, 16);
 }
 
-void flip32(uint32_t *i) {
+void flip32(void *i) {
     if(CPU_ENDIAN_SMALL) flip(i, 32);
 }
 
-void flip24(uint32_t *i) {
+void flip24(void *i) {
     // 32位ABCD
     // fread读3个字节，把数值填充到abc上
     if(CPU_ENDIAN_SMALL) flip(i, 24);
 }
 
-void flip64(uint64_t *i) {
+void flip64(void *i) {
     if(CPU_ENDIAN_SMALL) flip(i, 64);
 }
 
@@ -117,10 +130,10 @@ void readOrExit(void * __restrict __ptr, size_t __size, size_t __nitems, FILE * 
 int readOrReturn(void * __restrict __ptr, size_t __size, size_t __nitems, FILE * __restrict __stream, char *errMsg) {
     if (fread(__ptr, __size, __nitems, __stream) != __nitems) {
         puts(errMsg);
-        return 0;
+        return FAILURE;
     }
     
-    return 1;
+    return SUCCESS;
 }
 
 void printAndExit(char *errMsg) {

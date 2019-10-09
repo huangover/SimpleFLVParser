@@ -10,9 +10,11 @@
 #define FLVParserUtil_h
 
 #include <stdio.h>
+#include <stdarg.h>
 
 #define CPU_ENDIAN_SMALL computeEndian()
-
+#define SUCCESS 1
+#define FAILURE 0
 //typedef struct {
 //    int len;
 //    char *dst;
@@ -23,11 +25,12 @@ int computeEndian(void);
 //void fp_strcat(LogMessage *logMessage, const char *source);
 char *createLogString(void);
 void fp_strcat(char **dst, const char *source);
+void fp_strcatMultiple(char **dst, ...);
 
-void flip16(uint16_t *i);
-void flip24(uint32_t *i);
-void flip32(uint32_t *i);
-void flip64(uint64_t *i);
+void flip16(void *i);
+void flip24(void *i);
+void flip32(void *i);
+void flip64(void *i);
 /*
  读取一定数量的字节，如果失败，打印errMsg，退出程序
  */

@@ -11,6 +11,7 @@
 		115F91892338B45100BC24A8 /* FLVParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F91882338B45100BC24A8 /* FLVParser.c */; };
 		115F918D233B47A400BC24A8 /* FLVParserUtil.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F918C233B47A400BC24A8 /* FLVParserUtil.c */; };
 		115F9190233B47B200BC24A8 /* FLVScriptDataParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F918F233B47B200BC24A8 /* FLVScriptDataParser.c */; };
+		115F9197233CC9C600BC24A8 /* FLVVideoParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F9196233CC9C600BC24A8 /* FLVVideoParser.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,6 +37,10 @@
 		115F918C233B47A400BC24A8 /* FLVParserUtil.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = FLVParserUtil.c; sourceTree = "<group>"; };
 		115F918E233B47B200BC24A8 /* FLVScriptDataParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLVScriptDataParser.h; sourceTree = "<group>"; };
 		115F918F233B47B200BC24A8 /* FLVScriptDataParser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = FLVScriptDataParser.c; sourceTree = "<group>"; };
+		115F9195233CC9C600BC24A8 /* FLVVideoParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLVVideoParser.h; sourceTree = "<group>"; };
+		115F9196233CC9C600BC24A8 /* FLVVideoParser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = FLVVideoParser.c; sourceTree = "<group>"; };
+		115F9199234C9A1000BC24A8 /* test.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.flv; sourceTree = "<group>"; };
+		115F919C234DBF2D00BC24A8 /* SSZLive.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = SSZLive.flv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +73,8 @@
 		115F917D2338B41D00BC24A8 /* FLVParser */ = {
 			isa = PBXGroup;
 			children = (
+				115F919C234DBF2D00BC24A8 /* SSZLive.flv */,
+				115F9199234C9A1000BC24A8 /* test.flv */,
 				115F91852338B43000BC24A8 /* sample.flv */,
 				115F91862338B43900BC24A8 /* sample1.flv */,
 				115F917E2338B41D00BC24A8 /* main.m */,
@@ -75,6 +82,8 @@
 				115F91882338B45100BC24A8 /* FLVParser.c */,
 				115F918B233B47A400BC24A8 /* FLVParserUtil.h */,
 				115F918C233B47A400BC24A8 /* FLVParserUtil.c */,
+				115F9195233CC9C600BC24A8 /* FLVVideoParser.h */,
+				115F9196233CC9C600BC24A8 /* FLVVideoParser.c */,
 				115F918E233B47B200BC24A8 /* FLVScriptDataParser.h */,
 				115F918F233B47B200BC24A8 /* FLVScriptDataParser.c */,
 			);
@@ -138,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				115F917F2338B41D00BC24A8 /* main.m in Sources */,
+				115F9197233CC9C600BC24A8 /* FLVVideoParser.c in Sources */,
 				115F91892338B45100BC24A8 /* FLVParser.c in Sources */,
 				115F9190233B47B200BC24A8 /* FLVScriptDataParser.c in Sources */,
 				115F918D233B47A400BC24A8 /* FLVParserUtil.c in Sources */,
