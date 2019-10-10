@@ -12,7 +12,7 @@
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
-        const char* fileName = "SSZLive.flv";
+        const char* fileName = "music.flv";
         if (initWithFile(fileName)) {
             parse();
         }

@@ -15,6 +15,7 @@
 #include "FLVParser.h"
 #include "FLVParserUtil.h"
 #include "FLVVideoParser.h"
+#include "FLVAudioParser.h"
 
 #define VIDEO_TAG 9
 #define AUDIO_TAG 8
@@ -24,14 +25,6 @@
 FILE *file = NULL;
 long fileLen = 0;
 
-const char * const Audio_Codecs[] = {"Linear PCM", "ADPCM", "MP3", "Linear PCM, little endian",
-                        "Nellymoser 16KHz mono", "nellymoser 8khz mono", "nellymoser",
-                        "G711 A-law log PCM", "G711 mu-law log PCM", "reversed", "AAC",
-                        "Speedx", "MP3 8kHz", "Device-specific sound"};
-const char * const Audio_Sampling_Rate[] = {"5.5 kHz", "11 kHz", "22 kHz", "44 kHz"};
-const char * const Audio_Sampleing_Accuracy[] = {"8 bits", "16 bits"};
-const char * const Audio_Channel_Type[] = {"mono", "stereo"};
-
 void parseHeader(void);
 void parseBody(void);
 void parsePreviousTagLength(FILE *file);
@@ -39,7 +32,6 @@ void parseGeneralTagType(FILE *file, uint8_t *tagType);
 void parseDataSize(FILE *file, uint32_t *dataSize);
 void parseTimeStamp(FILE *file);
 void parseStreamID(FILE *file);
-void parseAudioData(FILE *file, uint32_t dataSize);
 void parseVideoData(FILE *file, uint32_t dataSize);
 
 int initWithFile(const char* fileName) {
@@ -176,20 +168,4 @@ void parseStreamID(FILE *file) {
     readOrExit(&streamID, sizeof(char), 3, file, "读取sream id失败");
     if(CPU_ENDIAN_SMALL) flip24(&streamID);
     printf("streamID是%u\n", streamID);
-}
-
-void parseAudioData(FILE *file, uint32_t dataSize) {
-    char param;
-    readOrExit(&param, sizeof(char), 1, file, "读取音频参数失败");
-    int codec = (int)((param & 0xf0) >> 4);
-    printf("编码器是: %s\n", Audio_Codecs[codec]);
-    int sample = (int)((param & 0x0c) >> 2);
-    printf("采样率: %s\n", Audio_Sampling_Rate[sample]);
-    int accu = (int)((param & 0x02) >> 1);
-    printf("精度: %s\n", Audio_Sampleing_Accuracy[accu]);
-    int channel = (int)(param & 0x01);
-    printf("声道: %s\n", Audio_Channel_Type[channel]);
-    
-    // 跳过实际数据
-    fseek(file, dataSize-1, SEEK_CUR);
 }

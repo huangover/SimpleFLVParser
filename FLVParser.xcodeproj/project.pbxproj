@@ -13,6 +13,7 @@
 		115F9190233B47B200BC24A8 /* FLVScriptDataParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F918F233B47B200BC24A8 /* FLVScriptDataParser.c */; };
 		115F9197233CC9C600BC24A8 /* FLVVideoParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F9196233CC9C600BC24A8 /* FLVVideoParser.c */; };
 		115F919F234DF3B800BC24A8 /* FLVAvcVideoPacketParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F919E234DF3B800BC24A8 /* FLVAvcVideoPacketParser.c */; };
+		115F91A6234ED09F00BC24A8 /* FLVAudioParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 115F91A5234ED09F00BC24A8 /* FLVAudioParser.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,6 +45,9 @@
 		115F919C234DBF2D00BC24A8 /* SSZLive.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = SSZLive.flv; sourceTree = "<group>"; };
 		115F919D234DF3B800BC24A8 /* FLVAvcVideoPacketParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLVAvcVideoPacketParser.h; sourceTree = "<group>"; };
 		115F919E234DF3B800BC24A8 /* FLVAvcVideoPacketParser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = FLVAvcVideoPacketParser.c; sourceTree = "<group>"; };
+		115F91A4234ED09F00BC24A8 /* FLVAudioParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLVAudioParser.h; sourceTree = "<group>"; };
+		115F91A5234ED09F00BC24A8 /* FLVAudioParser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = FLVAudioParser.c; sourceTree = "<group>"; };
+		115F91A7234EEA2C00BC24A8 /* music.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = music.flv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,23 +80,58 @@
 		115F917D2338B41D00BC24A8 /* FLVParser */ = {
 			isa = PBXGroup;
 			children = (
+				115F91A3234ED08000BC24A8 /* Utilities */,
+				115F91A2234ED06600BC24A8 /* ScriptData */,
+				115F91A1234ED06300BC24A8 /* Video */,
+				115F91A0234ED05E00BC24A8 /* Audio */,
 				115F919C234DBF2D00BC24A8 /* SSZLive.flv */,
+				115F91A7234EEA2C00BC24A8 /* music.flv */,
 				115F9199234C9A1000BC24A8 /* test.flv */,
 				115F91852338B43000BC24A8 /* sample.flv */,
 				115F91862338B43900BC24A8 /* sample1.flv */,
 				115F917E2338B41D00BC24A8 /* main.m */,
 				115F91872338B45100BC24A8 /* FLVParser.h */,
 				115F91882338B45100BC24A8 /* FLVParser.c */,
-				115F918B233B47A400BC24A8 /* FLVParserUtil.h */,
-				115F918C233B47A400BC24A8 /* FLVParserUtil.c */,
+			);
+			path = FLVParser;
+			sourceTree = "<group>";
+		};
+		115F91A0234ED05E00BC24A8 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				115F91A4234ED09F00BC24A8 /* FLVAudioParser.h */,
+				115F91A5234ED09F00BC24A8 /* FLVAudioParser.c */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		115F91A1234ED06300BC24A8 /* Video */ = {
+			isa = PBXGroup;
+			children = (
 				115F9195233CC9C600BC24A8 /* FLVVideoParser.h */,
 				115F9196233CC9C600BC24A8 /* FLVVideoParser.c */,
 				115F919D234DF3B800BC24A8 /* FLVAvcVideoPacketParser.h */,
 				115F919E234DF3B800BC24A8 /* FLVAvcVideoPacketParser.c */,
+			);
+			path = Video;
+			sourceTree = "<group>";
+		};
+		115F91A2234ED06600BC24A8 /* ScriptData */ = {
+			isa = PBXGroup;
+			children = (
 				115F918E233B47B200BC24A8 /* FLVScriptDataParser.h */,
 				115F918F233B47B200BC24A8 /* FLVScriptDataParser.c */,
 			);
-			path = FLVParser;
+			path = ScriptData;
+			sourceTree = "<group>";
+		};
+		115F91A3234ED08000BC24A8 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				115F918B233B47A400BC24A8 /* FLVParserUtil.h */,
+				115F918C233B47A400BC24A8 /* FLVParserUtil.c */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,6 +195,7 @@
 				115F9197233CC9C600BC24A8 /* FLVVideoParser.c in Sources */,
 				115F91892338B45100BC24A8 /* FLVParser.c in Sources */,
 				115F9190233B47B200BC24A8 /* FLVScriptDataParser.c in Sources */,
+				115F91A6234ED09F00BC24A8 /* FLVAudioParser.c in Sources */,
 				115F918D233B47A400BC24A8 /* FLVParserUtil.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
